@@ -4,7 +4,7 @@ abbrev: "vCon Consent Attachment"
 category: std
 
 docname: draft-howe-vcon-consent-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+submissiontype: std  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date: 2025-07-21
 consensus: true
@@ -202,13 +202,19 @@ informative:
 
 --- abstract
 
-This document defines a consent attachment type for Voice Conversations (vCon), establishing standardized mechanisms for recording, verifying, and managing consent information within conversation containers as defined in the vCon core specification. The consent attachment addresses privacy compliance challenges through structured metadata including consenting parties, temporal validity periods, and cryptographic proof mechanisms.
-
-The specification defines the mandatory and optional fields for consent attachments, including expiration timestamps, party references, dialog segments, and consent arrays. It supports granular consent management through purpose-based permissions and integrates with the AI Preferences vocabulary for automated processing systems. The attachment type incorporates SCITT (Supply Chain Integrity, Transparency, and Trust) for cryptographic transparency and provides integration patterns for consent ledger services.
-
-Key features include automated consent detection during conversation processing, auditable consent records with cryptographic proofs, support for consent revocation through superseding statements, and integration with existing privacy regulations. The consent attachment enables organizations to maintain compliance while providing sufficient structure for automated processing and verification of consent throughout the vCon lifecycle.
-
 --- middle
+
+# Abstract
+
+This document defines a consent attachment type for Voice Conversations (vCon), establishing standardized mechanisms for recording, verifying, and managing consent information within conversation containers as defined in the vCon core specification.
+The consent attachment addresses privacy compliance challenges through structured metadata including consenting parties, temporal validity periods, and cryptographic proof mechanisms.
+
+The specification defines the mandatory and optional fields for consent attachments, including expiration timestamps, party references, dialog segments, and consent arrays.
+It supports granular consent management through purpose-based permissions and integrates with the AI Preferences vocabulary for automated processing systems.
+The attachment type incorporates SCITT (Supply Chain Integrity, Transparency, and Trust) for cryptographic transparency and provides integration patterns for consent ledger services.
+
+Key features include automated consent detection during conversation processing, auditable consent records with cryptographic proofs, support for consent revocation through superseding statements, and integration with existing privacy regulations.
+The consent attachment enables organizations to maintain compliance while providing sufficient structure for automated processing and verification of consent throughout the vCon lifecycle.
 
 # Introduction
 
