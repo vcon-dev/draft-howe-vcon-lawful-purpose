@@ -46,7 +46,7 @@ author:
     email: thomas.howe@strolid.com
  -
     fullname: S. Lasker
-    organization: SS HullYeah!
+    organization: Independent
     email: stevenlasker@hotmail.com
 
 normative:
