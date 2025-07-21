@@ -3,34 +3,35 @@ title: "Voice Conversation (vCon) Consent Attachment"
 abbrev: "vCon Consent Attachment"
 category: std
 
-docname: draft-howe-vcon-consent-00
-
-submissiontype: IETF
+docname: draft-howe-vcon-consent-latest
+submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
-date: 2025-07-07
+date: 2025-07-21
 consensus: true
 v: 3
 area: art
 workgroup: vcon
 keyword:
- - conversation
- - consent
- - vcon
- - CDR
- - call detail record
- - call meta data
- - call recording
- - email thread
- - text conversation
- - video recording
- - video conference
- - conference recording
- - SCITT
- - transparency
- - privacy
- - GDPR
- - CCPA
- - HIPAA
+
+- conversation
+- consent
+- vcon
+- CDR
+- call detail record
+- call meta data
+- call recording
+- email thread
+- text conversation
+- video recording
+- video conference
+- conference recording
+- SCITT
+- transparency
+- privacy
+- GDPR
+- CCPA
+- HIPAA
+
 venue:
   group: "Virtualized Conversations"
   type: "Working Group"
@@ -40,17 +41,17 @@ venue:
   latest: "https://github.com/vcon-dev/draft-howe-vcon-consent"
 
 author:
- -
-    fullname: Thomas McCarthy-Howe
-    organization: Strolid, Inc.
-    email: thomas.howe@strolid.com
- -
-    fullname: S. Lasker
-    organization: Independent
-    email: stevenlasker@hotmail.com
+
+-
+  fullname: Thomas McCarthy-Howe
+  organization: Strolid, Inc.
+  email: thomas.howe@strolid.com
+-
+  fullname: S. Lasker
+  organization: Independent
+  email: stevenlasker@hotmail.com
 
 normative:
-
   RFC2119:
     target: RFC2119
     title: "Key words for use in RFCs to Indicate Requirement Levels"
@@ -199,23 +200,17 @@ informative:
       org: IANA
     date: n.d.
 
----
+--- abstract
 
-# Voice Conversation (vCon) Consent Attachment
+This document defines a consent attachment type for Voice Conversations (vCon), establishing standardized mechanisms for recording, verifying, and managing consent information within conversation containers as defined in the vCon core specification. The consent attachment addresses privacy compliance challenges through structured metadata including consenting parties, temporal validity periods, and cryptographic proof mechanisms.
 
-## Abstract
+The specification defines the mandatory and optional fields for consent attachments, including expiration timestamps, party references, dialog segments, and consent arrays. It supports granular consent management through purpose-based permissions and integrates with the AI Preferences vocabulary for automated processing systems. The attachment type incorporates SCITT (Supply Chain Integrity, Transparency, and Trust) for cryptographic transparency and provides integration patterns for consent ledger services.
 
-This document defines a consent attachment type for Voice Conversations (vCon), establishing standardized mechanisms for recording, verifying, and managing consent information within conversation containers as defined in the vCon core specification.
-The consent attachment addresses privacy compliance challenges through structured metadata including consenting parties, temporal validity periods, and cryptographic proof mechanisms.
+Key features include automated consent detection during conversation processing, auditable consent records with cryptographic proofs, support for consent revocation through superseding statements, and integration with existing privacy regulations. The consent attachment enables organizations to maintain compliance while providing sufficient structure for automated processing and verification of consent throughout the vCon lifecycle.
 
-The specification defines the mandatory and optional fields for consent attachments, including expiration timestamps, party references, dialog segments, and consent arrays.
-It supports granular consent management through purpose-based permissions and integrates with the AI Preferences vocabulary for automated processing systems.
-The attachment type incorporates SCITT (Supply Chain Integrity, Transparency, and Trust) for cryptographic transparency and provides integration patterns for consent ledger services.
+--- middle
 
-Key features include automated consent detection during conversation processing, auditable consent records with cryptographic proofs, support for consent revocation through superseding statements, and integration with existing privacy regulations.
-The consent attachment enables organizations to maintain compliance while providing sufficient structure for automated processing and verification of consent throughout the vCon lifecycle.
-
-## 1. Introduction
+# Introduction
 
 Voice conversations often contain sensitive information that requires proper consent management.
 This document defines a consent attachment type for Virtualized Conversations (vCon) that enables automated consent detection, structured consent recording, and proof mechanisms for compliance with privacy regulations.
@@ -233,11 +228,11 @@ The consent attachment addresses key privacy and compliance challenges faced by 
 It enables automated consent detection during conversation processing, provides auditable consent records, and supports regulatory compliance through structured consent management.
 The attachment type is designed to be flexible enough to accommodate various consent models while providing sufficient structure to enable automated processing and verification.
 
-## 2. Terminology
+# Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-### 2.1. Core Terms
+## Core Terms
 
 **Consent**: Any freely given, specific, informed, and unambiguous indication of the data subject's wishes by which they, by a statement or by a clear affirmative action, signify agreement to the processing of personal data relating to them [GDPR].
 
@@ -251,7 +246,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Processing**: Any operation or set of operations performed on personal data [GDPR].
 
-### 2.2. vCon-Specific Terms
+## vCon-Specific Terms
 
 **vCon**: A standardized container for conversational information, including metadata, participants, dialog content, analysis, and attachments [I-D.draft-ietf-vcon-core-00].
 
@@ -267,7 +262,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Attachment**: A data block either included or referenced in a vCon [I-D.draft-ietf-vcon-core-00].
 
-### 2.3. Consent-Specific Terms
+## Consent-Specific Terms
 
 **Consent Attachment**: A vCon attachment of type "consent" that contains structured consent information for one or more parties to a conversation.
 
@@ -287,7 +282,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Consent Verification**: The process of validating that consent is current, valid, and applicable to the requested processing activity.
 
-### 2.4. Technical Terms
+## Technical Terms
 
 **SCITT**: Supply Chain Integrity, Transparency, and Trust - a protocol for maintaining append-only transparency ledgers [I-D.draft-ietf-scitt-scrapi-05].
 
@@ -307,7 +302,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Privacy by Design**: The principle of embedding privacy considerations into the design and architecture of systems and processes [NIST-PRIVACY].
 
-### 2.5. Regulatory Terms
+# Regulatory Terms
 
 **GDPR**: General Data Protection Regulation - the primary data protection law in the European Union [GDPR].
 
@@ -325,14 +320,14 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Lawful Basis**: One of the six legal grounds for processing personal data under GDPR: consent, contract, legal obligation, vital interests, public task, or legitimate interests [GDPR].
 
-## 3. Requirements
+# Requirements
 
-### 3.1. Consent Attachment Requirements Summary
+## Consent Attachment Requirements Summary
 
 The vCon consent specification establishes standardized requirements for managing consent information within voice conversation containers as defined in [I-D.draft-ietf-vcon-core-00].
 The specification addresses privacy compliance challenges through structured consent attachments that capture essential metadata and proof mechanisms.
 
-#### 3.1.1. Core Requirements
+## Core Requirements
 
 **Mandatory Fields**: Consent attachments must include four essential fields:
 
@@ -343,17 +338,17 @@ The specification addresses privacy compliance challenges through structured con
 
 **Optional Fields**: Additional fields may include terms of service references, status monitoring intervals, consent ledger URLs, and cryptographic proof mechanisms.
 
-#### 3.1.2. Temporal Management
+## Temporal Management
 
 Consent attachments must implement proper expiration handling with configurable clock skew tolerance (default maximum 5 minutes).
 Indefinite consent is supported through null expiration values but requires periodic revalidation mechanisms.
 
-#### 3.1.3. Referential Integrity
+## Referential Integrity
 
 The specification enforces strict referential integrity between consent attachments and vCon elements.
 Party and dialog references must be validated against the vCon structure, and modifications to the underlying conversation data require corresponding updates to consent attachments.
 
-#### 3.1.4. Status Monitoring
+## Status Monitoring
 
 Consent status must be verified at configurable intervals based on data sensitivity:
 
@@ -362,17 +357,17 @@ Consent status must be verified at configurable intervals based on data sensitiv
 - Low-sensitivity data: 30-day verification cycles
 - Public data: 90-day verification cycles
 
-#### 3.1.5. Terms of Service Integration
+## 3.1.5. Terms of Service Integration
 
 Terms of service references must be immutable and support both URI references and embedded content.
 Implementations should maintain local caching with proper HTTP cache control compliance.
 
-#### 3.1.6. Compliance and Audit
+## 3.1.6. Compliance and Audit
 
 The specification enables automated consent detection, auditable consent records, and regulatory compliance through structured consent management.
 It supports various consent models while providing sufficient structure for automated processing and verification.
 
-## 4. Consent Attachment Structure
+# Consent Attachment Structure
 
 The consent attachment MUST be a JSON object that is included in the vCon attachments array.
 The consent attachment MUST contain the following top-level fields: "expiration", "party", "dialog" and "consents".
@@ -382,7 +377,7 @@ The consent attachment MAY contain the following top-level fields "terms_of_serv
 
 The consent attachment SHOULD include appropriate metadata fields as defined in the vCon core specification [I-D.draft-ietf-vcon-core-00], including "type", "start", and "signature" fields when applicable.
 
-## 5. Temporal Validity and Expiration
+# Temporal Validity and Expiration
 
 The "expiration" field MUST contain a timestamp in RFC3339 format indicating when the consent becomes invalid.
 Implementations MUST compare the current time against this expiration timestamp and SHALL reject expired consent attachments.
@@ -394,7 +389,7 @@ However, implementations SHOULD provide mechanisms for periodic consent revalida
 When processing consent attachments, implementations MUST account for clock skew and SHOULD allow for reasonable time differences between systems.
 The acceptable clock skew tolerance SHOULD be configurable but MUST NOT exceed 5 minutes by default.
 
-## 6. Terms of Service Integration
+# Terms of Service Integration
 
 The "terms_of_service" field MUST contain either a URI reference to the applicable terms of service document or an embedded terms object.
 When using URI references, implementations MUST support HTTPS URLs and SHOULD support content integrity verification through cryptographic hashes.
@@ -405,7 +400,7 @@ If terms of service change, a new consent attachment MUST be created rather than
 Implementations SHOULD maintain a local cache of terms of service documents to ensure availability during consent verification.
 The cache SHOULD respect HTTP cache control headers when fetching terms documents via URI.
 
-## 7. Party and Dialog References
+# Party and Dialog References
 
 The "party" field MUST contain a zero-based integer index referencing an entry in the vCon parties array.
 Implementations MUST validate that the referenced party index exists in the vCon and SHOULD verify that the party has authority to grant consent for the specified dialog.
@@ -416,7 +411,7 @@ Multiple consent attachments MAY reference the same dialog entry to represent co
 Implementations MUST maintain referential integrity between consent attachments and the referenced vCon elements.
 When a vCon is modified through redaction or amendment, consent attachment references MUST be updated accordingly or the consent MUST be invalidated.
 
-## 8. Status Monitoring and Intervals
+# Status Monitoring and Intervals
 
 The "status_interval" field MUST specify the maximum time interval, in seconds, between consent status verifications.
 Implementations MUST perform consent status checks at least as frequently as specified by this interval.
@@ -424,7 +419,7 @@ Implementations MUST perform consent status checks at least as frequently as spe
 The status interval MUST be a positive integer value.
 A status interval of zero indicates that consent status MUST be verified on every access to the associated dialog content.
 
-### 8.1. Recommended Interval Values
+## Recommended Interval Values
 
 The following intervals are RECOMMENDED based on privacy regulation requirements and operational considerations:
 
@@ -443,11 +438,11 @@ Implementations SHOULD consider the following factors when selecting intervals:
 
 When the status interval expires, implementations MUST either verify consent status through the consent ledger mechanism or treat the consent as potentially invalid until verification is completed. Implementations MAY continue to honor consent during brief verification delays but MUST NOT exceed twice the specified status interval without successful verification.
 
-## 9. Consent Ledger Integration
+# Consent Ledger Integration
 
 The "consent_ledger" field SHOULD contain a URL referencing a SCITT Transparency Service that maintains the authoritative consent state. Implementations MAY use this URL to verify current consent status and detect consent revocations.
 
-### 9.1. SCITT Transparency Service Interface
+## SCITT Transparency Service Interface
 
 Consent ledger services MUST implement the SCRAPI interface as specified in [I-D.draft-ietf-scitt-scrapi-05]. The consent ledger acts as a SCITT Transparency Service that:
 
@@ -456,88 +451,84 @@ Consent ledger services MUST implement the SCRAPI interface as specified in [I-D
 3. **Enables Verification**: Allows verification of consent status through receipt validation
 4. **Supports Revocation**: Handles consent revocation through statement updates
 
-### 9.2. Consent Statement Format
+## Consent Statement Format
 
 Consent statements MUST be formatted as COSE Sign1 objects containing:
 
-```json
-{
-  "protected": {
-    "alg": "ES256",
-    "kid": "consent-issuer-key-id",
-    "cty": "application/vcon-consent+json"
-  },
-  "unprotected": {
-    "consent_id": "urn:uuid:consent-identifier",
-    "vcon_uuid": "urn:uuid:vcon-identifier",
-    "party_index": 0,
-    "dialog_index": 0
-  },
-  "payload": {
-    "consents": [
-      {
-        "purpose": "recording",
-        "status": "granted",
-        "timestamp": "2025-01-02T12:15:30Z"
+    {
+      "protected": {
+        "alg": "ES256",
+        "kid": "consent-issuer-key-id",
+        "cty": "application/vcon-consent+json"
+      },
+      "unprotected": {
+        "consent_id": "urn:uuid:consent-identifier",
+        "vcon_uuid": "urn:uuid:vcon-identifier",
+        "party_index": 0,
+        "dialog_index": 0
+      },
+      "payload": {
+        "consents": [
+          {
+            "purpose": "recording",
+            "status": "granted",
+            "timestamp": "2025-01-02T12:15:30Z"
+          }
+        ],
+        "expiration": "2026-01-02T12:00:00Z",
+        "terms_of_service": "https://example.com/terms"
       }
-    ],
-    "expiration": "2026-01-02T12:00:00Z",
-    "terms_of_service": "https://example.com/terms"
-  }
-}
-```
+    }
 
-### 9.3. Consent Ledger Operations
+# Consent Ledger Operations
 
-#### 9.3.1. Registration
+## Registration
 
 - **Endpoint**: `POST /entries`
 - **Content-Type**: `application/cose`
 - **Body**: COSE Sign1 consent statement
 - **Response**: 201 with receipt or 303 with location for async processing
 
-#### 9.3.2. Status Verification
+### Status Verification
 
 - **Endpoint**: `GET /entries/{entry-id}`
 - **Response**: 200 with receipt or 302/404 for pending/not found
 
-#### 9.3.3. Receipt Resolution
+### Receipt Resolution
 
 - **Endpoint**: `GET /entries/{entry-id}`
 - **Response**: 200 with current receipt or 404 if not found
 
-### 9.4. Consent Revocation
+## Consent Revocation
 
 Consent revocation is handled by registering a new Signed Statement that supersedes the original consent:
 
-```json
-{
-  "protected": {
-    "alg": "ES256",
-    "kid": "consent-issuer-key-id",
-    "cty": "application/vcon-consent+json"
-  },
-  "unprotected": {
-    "consent_id": "urn:uuid:consent-identifier",
-    "vcon_uuid": "urn:uuid:vcon-identifier",
-    "supersedes": "urn:uuid:original-consent-id",
-    "revocation": true
-  },
-  "payload": {
-    "consents": [
-      {
-        "purpose": "recording",
-        "status": "revoked",
-        "timestamp": "2025-01-03T10:30:00Z"
+    {
+      "protected": {
+        "alg": "ES256",
+        "kid": "consent-issuer-key-id",
+        "cty": "application/vcon-consent+json"
+      },
+      "unprotected": {
+        "consent_id": "urn:uuid:consent-identifier",
+        "vcon_uuid": "urn:uuid:vcon-identifier",
+        "supersedes": "urn:uuid:original-consent-id",
+        "revocation": true
+      },
+      "payload": {
+        "consents": [
+          {
+            "purpose": "recording",
+            "status": "revoked",
+            "timestamp": "2025-01-03T10:30:00Z"
+          }
+        ],
+        "revocation_reason": "user_request",
+        "revocation_timestamp": "2025-01-03T10:30:00Z"
       }
-    ],
-    "revocation_reason": "user_request",
-    "revocation_timestamp": "2025-01-03T10:30:00Z"
-  }
-}
-```
+    }
 
-### 9.5. Implementation Requirements
+## Implementation Requirements
 
 When a consent ledger URL is provided, implementations MUST:
 
@@ -548,7 +539,7 @@ When a consent ledger URL is provided, implementations MUST:
 5. **Verify Receipts**: Validate all receipts using SCITT verification procedures
 6. **Cache Strategically**: Cache consent state within status_interval limits
 
-### 9.6. Error Handling
+## Error Handling
 
 Consent ledger services MUST return appropriate HTTP status codes and Concise Problem Details objects as specified in SCRAPI:
 
@@ -559,7 +550,7 @@ Consent ledger services MUST return appropriate HTTP status codes and Concise Pr
 - **429**: Rate limiting exceeded
 - **503**: Service temporarily unavailable
 
-### 9.7. Privacy Considerations
+## Privacy Considerations
 
 Consent ledger services SHOULD implement privacy-preserving mechanisms:
 
@@ -568,7 +559,7 @@ Consent ledger services SHOULD implement privacy-preserving mechanisms:
 - **Audit Logging**: Maintain audit trails for compliance purposes
 - **Data Retention**: Implement appropriate data retention policies
 
-## 10. Cryptographic Proof Requirements
+# Cryptographic Proof Requirements
 
 The "proof" field MUST contain an array of proof objects that provide cryptographic evidence of valid consent.
 Each proof object MUST include a "type" field specifying the proof mechanism and a "value" field containing the proof data.
@@ -588,7 +579,7 @@ The proof verification process MUST include validation of the signing key author
 Proof objects MAY reference external proof data to minimize consent attachment size.
 When external references are used, implementations MUST verify the integrity of externally referenced proof data using cryptographic hashes included in the proof object.
 
-## 11. Granular Consent Management
+# Granular Consent Management
 
 The "consents" field MUST contain an array of consent objects, each specifying a particular permission granted by the consenting party.
 Each consent object MUST include a "purpose" field identifying the specific use case and a "status" field indicating whether consent is granted or denied.
@@ -596,7 +587,7 @@ Each consent object MUST include a "purpose" field identifying the specific use 
 Standard consent purposes MUST include "recording", "transcription", "analysis", "storage", and "sharing".
 Implementations MAY define additional purpose categories but SHOULD use standardized purpose taxonomies when available.
 
-### 11.1. AI Preferences Vocabulary Support
+## AI Preferences Vocabulary Support
 
 Implementations SHOULD support the AI Preferences vocabulary as defined in [I-D.draft-ietf-aipref-vocab-01] for expressing granular consent related to automated processing systems.
 When using the AI Preferences vocabulary, consent objects MAY include the following standardized categories:
@@ -612,14 +603,12 @@ The "purpose" field SHOULD use the corresponding label from the AI Preferences v
 
 Example consent object using AI Preferences vocabulary:
 
-```json
-{
-  "purpose": "genai",
-  "status": "denied",
-  "vocabulary": "ai-pref",
-  "timestamp": "2025-01-02T12:15:30Z"
-}
-```
+    {
+      "purpose": "genai",
+      "status": "denied",
+      "vocabulary": "ai-pref",
+      "timestamp": "2025-01-02T12:15:30Z"
+    }
 
 Implementations that support the AI Preferences vocabulary MUST follow the hierarchical relationship rules defined in [I-D.draft-ietf-aipref-vocab-01], where more specific categories override general categories unless explicitly stated otherwise.
 
@@ -628,7 +617,7 @@ Each consent object SHOULD include additional metadata such as the timestamp whe
 Implementations MUST support fine-grained consent evaluation, allowing different consent decisions for different purposes.
 When multiple consent objects apply to the same purpose, the most restrictive consent MUST take precedence.
 
-## 12. Consent Withdrawal and Revocation
+# Consent Withdrawal and Revocation
 
 Implementations MUST support consent withdrawal mechanisms that allow data subjects to revoke previously granted consent.
 When consent is revoked, the consent status in the ledger service MUST be updated immediately and all processing of the associated dialog content MUST cease.
@@ -639,7 +628,7 @@ Implementations MUST honor consent revocations even if they cannot immediately d
 When consent is revoked, implementations SHOULD notify all parties that have received copies of the vCon containing the revoked consent.
 The notification mechanism MAY use the SCITT transparency service integration described in the vCon overview [I-D.draft-ietf-vcon-overview-00] and related vCon lifecycle specifications.
 
-## 13. Privacy and Data Minimization
+# Privacy and Data Minimization
 
 Consent attachments MUST implement data minimization principles by including only information necessary for consent verification and audit purposes.
 Personal information SHOULD NOT be duplicated in consent attachments when it is already available in the referenced vCon elements.
@@ -648,7 +637,7 @@ The consent attachment design MUST support privacy-preserving verification mecha
 
 Implementations SHOULD support consent attachment redaction techniques that allow sensitive consent details to be removed while maintaining the ability to verify that valid consent was originally present.
 
-## 14. Error Handling and Validation
+# Error Handling and Validation
 
 Implementations MUST validate consent attachment syntax according to the JSON schema defined in this specification.
 Malformed consent attachments MUST be rejected with appropriate error messages indicating the specific validation failures.
@@ -658,7 +647,7 @@ The error handling process MUST distinguish between temporary failures (such as 
 
 Implementations SHOULD provide detailed error reporting to assist with troubleshooting consent validation issues while avoiding exposure of sensitive information in error messages.
 
-## 15. Interoperability and Versioning
+# Interoperability and Versioning
 
 Consent attachments MUST include version information to support evolution of the consent attachment specification.
 Implementations MUST handle version mismatches gracefully and SHOULD support multiple consent attachment versions during transition periods.
@@ -668,7 +657,7 @@ New fields MAY be added to consent attachments but MUST NOT break existing valid
 
 Implementations SHOULD support consent attachment format negotiation when multiple parties exchange vCons with different consent attachment version support.
 
-## 16. Security Considerations
+# Security Considerations
 
 All consent attachments MUST be integrity protected using the vCon signing mechanisms as defined in [I-D.draft-ietf-vcon-core-00].
 Consent attachments containing sensitive information SHOULD be encrypted when the vCon is transmitted outside secure environments.
@@ -679,65 +668,63 @@ The consent attachment design MUST prevent replay attacks and consent forgery th
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-```json
-{
-  "expiration": "2026-01-02T12:00:00Z",
-  "terms_of_service": "https://example.com/terms",
-  "party": 0,
-  "dialog": 0,
-  "status_interval": "30d",
-  "consent_ledger": "https://ledger.example.com/consent/123",
-  "proof": [
     {
-      "timestamp": "2025-01-02T12:15:30Z",
-      "type": "verbal_confirmation"
-    },
-    {
-      "url": "https://example.com/consent-form.pdf",
-      "type": "external_asset"
+      "expiration": "2026-01-02T12:00:00Z",
+      "terms_of_service": "https://example.com/terms",
+      "party": 0,
+      "dialog": 0,
+      "status_interval": "30d",
+      "consent_ledger": "https://ledger.example.com/consent/123",
+      "proof": [
+        {
+          "timestamp": "2025-01-02T12:15:30Z",
+          "type": "verbal_confirmation"
+        },
+        {
+          "url": "https://example.com/consent-form.pdf",
+          "type": "external_asset"
+        }
+      ],
+      "consents": [
+        {
+          "value": true,
+          "consent": "recording"
+        },
+        {
+          "value": true,
+          "consent": "transcription"
+        },
+        {
+          "value": true,
+          "consent": "analysis"
+        }
+      ]
     }
-  ],
-  "consents": [
-    {
-      "value": true,
-      "consent": "recording"
-    },
-    {
-      "value": true,
-      "consent": "transcription"
-    },
-    {
-      "value": true,
-      "consent": "analysis"
-    }
-  ]
-}
-```
 
-## 17. Attachment Fields
+# Attachment Fields
 
-### 17.1. Required Fields
+## Required Fields
 
 - **expiration**: ISO 8601 timestamp indicating when consent expires
 - **party**: Index of the party in the vCon parties array
 - **dialog**: Index of the dialog in the vCon dialog array
 - **consents**: Array of consent objects with value and consent type
 
-### 17.2. Optional Fields
+##  Optional Fields
 
 - **terms_of_service**: URL to the terms of service document
 - **status_interval**: Duration string (e.g., "30d") for status check intervals
 - **consent_ledger**: URL to external consent ledger for audit purposes
 - **proof**: Array of proof objects supporting the consent
 
-## 18. Consent Objects
+# Consent Objects
 
 Each consent object MUST contain:
 
 - **value**: Boolean indicating consent status (true for granted, false for denied)
 - **consent**: String identifying the consent type (e.g., "recording", "transcription", "analysis")
 
-## 19. Proof Objects
+# Proof Objects
 
 Proof objects provide evidence of consent and MAY contain:
 
@@ -745,9 +732,9 @@ Proof objects provide evidence of consent and MAY contain:
 - **type**: Proof type identifier (e.g., "verbal_confirmation", "external_asset")
 - **url**: URL to external proof document (for external_asset type)
 
-## 20. IANA Considerations
+# IANA Considerations
 
-### 20.1. vCon Attachment Type Registration
+## vCon Attachment Type Registration
 
 This document requests IANA to register the following vCon attachment type:
 
@@ -755,9 +742,9 @@ This document requests IANA to register the following vCon attachment type:
 - **Description**: Consent information for voice conversation participants
 - **Reference**: This document
 
-## 21. How to Use the Consent Attachment
+# How to Use the Consent Attachment
 
-### 21.1. Creating a Consent Attachment
+## Creating a Consent Attachment
 
 To create a consent attachment for a vCon:
 
@@ -768,32 +755,30 @@ To create a consent attachment for a vCon:
 5. **Add proof mechanisms**: Include cryptographic or other proof of consent
 6. **Include in vCon**: Add the attachment to the vCon attachments array
 
-### 21.2. Example Usage
+## Example Usage
 
-```json
-{
-  "type": "consent",
-  "start": "2025-01-02T12:15:30Z",
-  "expiration": "2026-01-02T12:00:00Z",
-  "party": 0,
-  "dialog": 0,
-  "consents": [
     {
-      "purpose": "recording",
-      "status": "granted",
-      "timestamp": "2025-01-02T12:15:30Z"
+      "type": "consent",
+      "start": "2025-01-02T12:15:30Z",
+      "expiration": "2026-01-02T12:00:00Z",
+      "party": 0,
+      "dialog": 0,
+      "consents": [
+        {
+          "purpose": "recording",
+          "status": "granted",
+          "timestamp": "2025-01-02T12:15:30Z"
+        }
+      ],
+      "proof": [
+        {
+          "type": "verbal_confirmation",
+          "timestamp": "2025-01-02T12:15:30Z"
+        }
+      ]
     }
-  ],
-  "proof": [
-    {
-      "type": "verbal_confirmation",
-      "timestamp": "2025-01-02T12:15:30Z"
-    }
-  ]
-}
-```
 
-### 21.3. Processing Consent Attachments
+## Processing Consent Attachments
 
 When processing a vCon with consent attachments:
 
@@ -804,7 +789,7 @@ When processing a vCon with consent attachments:
 5. **Check ledger status**: If a consent ledger is specified, verify current status
 6. **Apply permissions**: Use consent status to determine allowed operations
 
-## 22. Privacy Considerations
+# Privacy Considerations
 
 This document describes mechanisms for managing consent information within vCon containers as defined in [I-D.draft-ietf-vcon-core-00].
 Implementers MUST ensure compliance with applicable privacy regulations, including but not limited to GDPR [GDPR], CCPA [CCPA], and HIPAA [HIPAA].
@@ -819,40 +804,47 @@ The consent attachment provides structured mechanisms for recording and verifyin
 
 Implementers SHOULD follow privacy by design principles [NIST-PRIVACY] and implement appropriate technical and organizational measures to protect personal data throughout the consent lifecycle.
 
-## 23. Security Considerations
+# Security Considerations
 
 Consent attachments contain sensitive information that requires appropriate security measures:
 
-### 23.1. Cryptographic Protection
+## Cryptographic Protection
 
 - All consent attachments MUST be integrity protected using vCon signing mechanisms
 - Consent attachments containing sensitive information SHOULD be encrypted when transmitted outside secure environments
 - Implementations MUST use strong cryptographic algorithms as specified in [COSE-ALG]
 
-### 23.2. Access Control
+## Access Control
 
 - Implementations MUST implement appropriate access controls for consent data
 - Consent verification SHOULD be performed with minimal privilege
 - Audit logging MUST be implemented for all consent operations
 
-### 23.3. Network Security
+## Network Security
 
 - All communications with consent ledger services MUST use TLS 1.2 or higher
 - Implementations MUST validate certificate chains and hostnames
 - Implementations SHOULD implement certificate pinning for critical services
 
-### 23.4. Data Protection
+## Data Protection
 
 - Consent data SHOULD be encrypted at rest
 - Implementations MUST implement secure key management
 - Implementations SHOULD support hardware security modules for key storage
 
-### 23.5. Threat Mitigation
+## Threat Mitigation
 
 - Implementations MUST prevent replay attacks through proper use of timestamps and nonces
 - Implementations MUST validate all cryptographic proofs to prevent forgery
 - Implementations SHOULD implement rate limiting to prevent abuse
 
-## References
+# References
 
 {backmatter}
+
+--- back
+
+# Acknowledgments
+{:numbered="false"}
+
+- Thank you to Diana James and Cody Launius for their collaboration and imagination.
