@@ -1,0 +1,889 @@
+
+
+
+
+vCon                                                    T. McCarthy-Howe
+Internet-Draft                                                   Strolid
+Intended status: Standards Track                       24 September 2025
+Expires: 28 March 2026
+
+
+                          vCon Lawful Purpose
+                   draft-howe-vcon-lawful-purpose-00
+
+Abstract
+
+   This document defines a lawful purpose extension for Virtualized
+   Conversations (vCon) that provides standardized mechanisms for
+   recording, verifying, and managing the lawful basis for processing
+   data within conversation containers.  The lawful purpose extension
+   addresses privacy compliance challenges through structured attachment
+   metadata, including the specific lawful basis being asserted,
+   temporal validity periods where applicable, and cryptographic proof
+   mechanisms.
+
+   The extension is designed as a Compatible vCon extension that
+   introduces lawful basis management capabilities without altering
+   existing vCon semantics.  It defines a "lawful_purpose" attachment
+   type with structured records for each of the six lawful bases defined
+   in regulations like GDPR, including consent, contract, legal
+   obligation, vital interests, public task, and legitimate interests.
+
+   Key features include automated lawful basis detection during
+   conversation processing, auditable records with cryptographic proofs,
+   granular purpose-based permissions for all lawful purposes,
+   documented justifications for other lawful bases, and integration
+   with privacy regulations including GDPR, CCPA, and HIPAA.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://vcon-
+   dev.github.io/draft-howe-vcon-consent/draft-howe-vcon-lawful-purpose-
+   latest.html.  Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-howe-vcon-lawful-purpose/.
+
+   Discussion of this document takes place on the vCon Working Group
+   mailing list (mailto:vcon@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/vcon/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/vcon/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/vcon-dev/draft-howe-vcon-lawful-purpose.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 28 March 2026.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+     2.1.  Core Terms
+   3.  Overview of Lawful Bases
+   4.  vCon Lawful Purpose Extension Definition
+     4.1.  Extension Classification
+     4.2.  Extension Registration
+     4.3.  Extension Usage
+   5.  Lawful Purpose Attachment Structure
+     5.1.  Attachment Container
+     5.2.  Lawful Purpose Body Structure
+       5.2.1.  Required Fields
+       5.2.2.  Optional Fields
+       5.2.3.  Purpose Grant Objects
+       5.2.4.  Proof Mechanism Objects
+     5.3.  Example Lawful Purpose Attachment
+   6.  Lawful Purpose Processing Requirements
+     6.1.  Temporal Validity
+     6.2.  Reference Validation
+     6.3.  Granular Permission Evaluation
+     6.4.  Proof Verification
+   7.  Transparency Service Integration
+     7.1.  Ledger Services
+     7.2.  Ledger Integration Requirements
+     7.3.  Privacy Considerations for Ledgers
+   8.  Error Handling
+   9.  Interoperability
+   10. Security Considerations
+     10.1.  Cryptographic Protection and Forgery
+     10.2.  Replay Attack Prevention
+     10.3.  Secure Communication Channels
+     10.4.  Audit Logging
+   11. Privacy and Regulatory Compliance
+     11.1.  Data Minimization
+     11.2.  Regulatory Alignment
+     11.3.  Data Subject Rights
+   12. Conclusion
+   13. Security and Privacy Considerations Summary
+   14. References
+     14.1.  Normative References
+     14.2.  Informative References
+   Appendix A.  IANA Considerations
+     A.1.  vCon Extensions Names Registry
+     A.2.  Attachment Object Parameter Names Registry
+     A.3.  Lawful Purpose Attachment Type Values Registry
+   Appendix B.  Acknowledgements
+   Author's Address
+
+1.  Introduction
+
+   Conversations originating from all modes (voice, video, email, fax
+   and messaging), contain sensitive information that requires a
+   documented lawful basis for processing to comply with privacy
+   regulations and ethical standards.  This document defines a lawful
+   purpose extension for Virtualized Conversations (vCon) that enables
+   automated lawful basis detection, structured recording, and
+   cryptographic proof mechanisms.
+
+   A vCon (Virtualized Conversation) is a standardized container format
+   for storing conversation data, including metadata, participants, and
+   conversation content, as defined in [I-D.draft-ietf-vcon-core-00].
+   The vCon specification supports extensible attachments that can carry
+   additional structured data related to the conversation.
+
+   This lawful purpose extension provides a Compatible vCon extension
+   (as defined in Section 2.5 of [I-D.draft-ietf-vcon-core-00]) that
+   introduces lawful basis management capabilities through a
+   standardized "lawful_purpose" attachment type.  The extension
+   captures essential metadata including:
+
+   *  The specific lawful basis being asserted for processing
+
+   *  Party identification (for consent-based processing)
+
+   *  Temporal validity periods (where applicable)
+
+   *  Granular purpose-based permissions
+
+   *  Documented justifications for non-consent-based lawful purposes
+
+   *  Cryptographic proof mechanisms and external verification
+
+   *  Integration with SCITT transparency services for audit trails
+
+   The lawful purpose extension addresses key privacy and compliance
+   challenges while maintaining compatibility with existing vCon
+   implementations.  Implementations that do not recognize the lawful
+   purpose extension can safely ignore lawful basis attachments while
+   maintaining valid processing of other vCon content.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 RFC2119 [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.1.  Core Terms
+
+   *Lawful Basis*: A valid justification, as defined by applicable law
+   (e.g., GDPR), for the processing of personal data.  One of six
+   potential bases must be identified prior to processing.
+
+   *Data Subject*: The identified or identifiable natural person to whom
+   personal data relates [GDPR].
+
+   *Lawful Basis Attachment*: A vCon attachment with type "lawful_basis"
+   that contains structured information documenting the lawful basis for
+   processing conversation data.
+
+   *Attestation Ledger*: An external transparency service that maintains
+   an authoritative, verifiable log of attestations about a vCon, which
+   can include attestations of a lawful basis.  This document defines
+   integration with ledgers using the SCITT protocol.
+
+   *Compatible Extension*: A vCon extension that introduces additional
+   data without altering the meaning or structure of existing elements,
+   as defined in [I-D.draft-ietf-vcon-core-00].
+
+3.  Overview of Lawful Bases
+
+   While this document defines an extension for recording any lawful
+   basis for processing, it is important to understand the distinctions
+   between them.  Under regulations like the GDPR, there are six lawful
+   bases for processing personal data.  Consent is unique in that it is
+   a permission granted by the data subject, while the other five are
+   justifications asserted by the data controller.  Understanding this
+   distinction is critical for correctly implementing this extension.
+
+   The six lawful bases for processing under GDPR are:
+
+   1.  *Consent*: The data subject has given clear, unambiguous consent
+       for their personal data to be processed for a specific purpose.
+       This basis is unique because it originates with the data subject.
+
+   2.  *Contract*: The processing is necessary for a contract that the
+       data subject has with the organization, or because they have
+       asked the organization to take specific steps before entering
+       into a contract.  For example, processing a customer's address to
+       deliver a purchased product.
+
+   3.  *Legal Obligation*: The processing is necessary for the
+       organization to comply with the law (not including contractual
+       obligations).  For example, a financial institution may be
+       legally required to report certain transactions to prevent fraud.
+
+   4.  *Vital Interests*: The processing is necessary to protect
+       someone's life.  For example, sharing a patient's medical history
+       with emergency services.
+
+   5.  *Public Task*: The processing is necessary for the organization
+       to perform a task in the public interest or for its official
+       functions, and the task or function has a clear basis in law.
+       For example, a local authority processing data to provide public
+       services.
+
+   6.  *Legitimate Interests*: The processing is necessary for the
+       organization's legitimate interests or the legitimate interests
+       of a third party, unless there is a good reason to protect the
+       individual's personal data which overrides those legitimate
+       interests.  For example, a business using customer data for
+       marketing analysis to improve its services, provided it does not
+       infringe on the customer's privacy rights.
+
+   This lawful purpose extension for vCon provides a standardized way to
+   record and verify any of these lawful bases.  The presence and
+   content of a lawful_basis attachment are intended to be the primary
+   mechanism for determining the authorized uses of a vCon's data.
+
+4.  vCon Lawful Purpose Extension Definition
+
+4.1.  Extension Classification
+
+   The lawful purpose extension is a *Compatible Extension* as defined
+   in Section 2.5 of [I-D.draft-ietf-vcon-core-00].  This extension:
+
+   *  Introduces additional lawful purpose metadata without altering
+      existing vCon semantics
+
+   *  Can be safely ignored by implementations that don't support lawful
+      purpose processing
+
+   *  Does not require listing in the must_support parameter
+
+   *  Maintains backward compatibility with existing vCon
+      implementations
+
+4.2.  Extension Registration
+
+   This document defines the "lawful_purpose" extension token for
+   registration in the vCon Extensions Names Registry:
+
+   *  *Extension Name*: lawful_purpose
+
+   *  *Extension Description*: Lawful purpose management for voice
+      conversation participants with cryptographic proof mechanisms and
+      regulatory compliance support
+
+   *  *Change Controller*: IESG
+
+   *  *Specification Document*: This document
+
+4.3.  Extension Usage
+
+   vCon instances that include lawful purpose attachments SHOULD include
+   "lawful_purpose" in the extensions array:
+
+   json { "uuid": "01234567-89ab-cdef-0123-456789abcdef", "extensions":
+   ["lawful_purpose"], "created_at": "2025-01-02T12:00:00Z", "parties":
+   [...], "dialog": [...], "attachments": [ { "type": "lawful_purpose",
+   "start": "2025-01-02T12:15:30Z", "party": 0, "dialog": 0, "encoding":
+   "json", "body": { // Lawful purpose data structure defined below } }
+   ] }
+
+5.  Lawful Purpose Attachment Structure
+
+5.1.  Attachment Container
+
+   Lawful purpose information MUST be included as vCon attachments using
+   the standard attachment object structure defined in Section 4.4 of
+   [I-D.draft-ietf-vcon-core-00].
+
+   The lawful purpose attachment MUST include:
+
+   *  *type*: MUST be set to "lawful_purpose"
+
+   *  *encoding*: MUST be set to "json" for structured lawful purpose
+      data
+
+   *  *body*: MUST contain the lawful purpose data structure as defined
+      below
+
+   The lawful purpose attachment SHOULD include:
+
+   *  *start*: ISO 8601 timestamp when lawful purpose was recorded
+
+   *  *party*: Index of the party in the vCon parties array
+
+   *  *dialog*: Index of the associated dialog in the vCon dialog array
+
+5.2.  Lawful Purpose Body Structure
+
+   The body field of the lawful purpose attachment MUST contain a JSON
+   object with the following structure:
+
+5.2.1.  Required Fields
+
+   *  *lawful_basis*: String enum from consent, contract,
+      legal_obligation, vital_interests, public_task,
+      legitimate_interests
+
+   *  *expiration*: ISO 8601 timestamp indicating when the lawful basis
+      expires, or null for indefinite
+
+   *  *purpose_grants*: Array of purpose grant objects specifying
+      permissions
+
+5.2.2.  Optional Fields
+
+   *  *terms_of_service*: URL reference to applicable terms of service
+      document
+
+   *  *status_interval*: Duration string for revalidation intervals
+      (e.g., "30d")
+
+   *  *ledger*: An object containing information about an external
+      transparency ledger for audit trails.  The object has the
+      following fields:
+
+      -  *type*: (string, required) The type of the transparency ledger
+         service.  This document defines an initial value of "scitt".
+         Other values may be registered in an IANA registry.
+
+      -  *url*: (string, required) The URL endpoint for the transparency
+         ledger service.
+
+   *  *proof_mechanisms*: Array of proof objects supporting the lawful
+      basis
+
+   *  *metadata*: Additional implementation-specific metadata
+
+5.2.3.  Purpose Grant Objects
+
+   Each object in the purpose_grants array MUST contain:
+
+   *  *purpose*: String identifying the processing purpose (e.g.,
+      "recording", "transcription", "analysis")
+
+   *  *granted*: Boolean indicating whether permission is granted (true)
+      or denied (false)
+
+   *  *granted_at*: ISO 8601 timestamp when this specific permission was
+      granted
+
+   *  *conditions*: Optional array of strings describing conditions or
+      restrictions
+
+5.2.4.  Proof Mechanism Objects
+
+   Each object in the proof_mechanisms array MUST contain:
+
+   *  *proof_type*: String identifying the proof mechanism type
+
+   *  *timestamp*: ISO 8601 timestamp when proof was created
+
+   *  *proof_data*: Object containing proof-type-specific data
+
+   Supported proof types include:
+
+   *  *verbal_confirmation*: Lawful purpose given verbally within the
+      conversation
+
+   *  *signed_document*: External signed lawful purpose form or
+      agreement
+
+   *  *cryptographic_signature*: Digital signature using COSE standards
+
+   *  *external_system*: Lawful purpose recorded in external system with
+      API verification
+
+5.3.  Example Lawful Purpose Attachment
+
+   json { "type": "lawful_purpose", "start": "2025-01-02T12:15:30Z",
+   "party": 0, "dialog": 0, "encoding": "json", "body": {
+   "lawful_basis": "consent", "expiration": "2026-01-02T12:00:00Z",
+   "purpose_grants": [ { "purpose": "recording", "granted": true,
+   "granted_at": "2025-01-02T12:15:30Z" }, { "purpose": "transcription",
+   "granted": true, "granted_at": "2025-01-02T12:15:30Z" }, { "purpose":
+   "sentiment_analysis", "granted": false, "granted_at":
+   "2025-01-02T12:15:30Z" } ], "proof_mechanisms": [ { "proof_type":
+   "verbal_confirmation", "timestamp": "2025-01-02T12:15:30Z",
+   "proof_data": { "dialog_reference": 0, "time_offset": "00:01:23",
+   "confirmation_text": "Yes, I consent to recording this call" } } ],
+   "terms_of_service": "https://example.com/terms/v2024.1",
+   "status_interval": "30d", "ledger": { "type": "scitt", "url":
+   "https://transparency.example.com/lawful_purpose/ledger" } } }
+
+6.  Lawful Purpose Processing Requirements
+
+6.1.  Temporal Validity
+
+   Implementations MUST validate lawful basis expiration before
+   processing:
+
+   1.  Compare current time against expiration timestamp
+
+   2.  Account for reasonable clock skew (maximum 5 minutes recommended)
+
+   3.  Reject processing if lawful basis has expired
+
+   4.  Support null expiration for indefinite validity subject to
+       revalidation intervals
+
+6.2.  Reference Validation
+
+   Implementations MUST validate attachment references:
+
+   1.  Verify party index exists in vCon parties array
+
+   2.  Verify dialog indices exist in vCon dialog array
+
+6.3.  Granular Permission Evaluation
+
+   When processing vCon content, implementations MUST:
+
+   1.  Check for applicable lawful purpose attachments for the requested
+       processing purpose
+
+   2.  Evaluate all relevant purpose grants for the specific purpose
+
+   3.  Apply most restrictive permission when multiple grants apply
+
+   4.  Deny processing if no valid permission exists or if it is
+       explicitly denied
+
+6.4.  Proof Verification
+
+   Implementations SHOULD verify proof mechanisms when present:
+
+   1.  Validate cryptographic signatures using appropriate algorithms
+
+   2.  Verify external document integrity using content hashes
+
+   3.  Check external system lawful purpose status via API calls
+
+   4.  Log proof verification results for audit purposes
+
+7.  Transparency Service Integration
+
+7.1.  Ledger Services
+
+   The optional ledger field enables integration with external
+   transparency services for audit trails.  The ledger object's type
+   field specifies the protocol to be used.
+
+   When the ledger object is present and its type is "scitt", the url
+   field MUST:
+
+   *  Reference a SCITT (Supply Chain Integrity, Transparency, and
+      Trust) Transparency Service implementing SCRAPI
+      [I-D.draft-ietf-scitt-scrapi-05]
+
+   *  Provide cryptographic receipts for state changes
+
+   *  Support status queries and updates
+
+   *  Implement appropriate access controls and privacy protections
+
+   Other transparency service types may be used if they are registered
+   with IANA.  The documentation for each registered type must specify
+   the necessary protocols and interaction models.
+
+7.2.  Ledger Integration Requirements
+
+   Implementations that support ledgers MUST:
+
+   1.  Use HTTPS with TLS 1.2 or higher for all communications
+
+   2.  Implement appropriate authentication mechanisms
+
+   3.  Validate SCITT receipts using standard verification procedures
+
+   4.  Handle service unavailability gracefully
+
+   5.  Cache lawful basis state within configured intervals
+
+7.3.  Privacy Considerations for Ledgers
+
+   Ledger services SHOULD:
+
+   *  Store only lawful purpose metadata, not full conversation content
+
+   *  Implement privacy-preserving query mechanisms
+
+   *  Maintain audit logs for regulatory compliance
+
+   *  Support deletion and other personal data compliance
+      responsibilities
+
+8.  Error Handling
+
+   Implementations SHOULD provide specific error reporting:
+
+   *  *LawfulBasisExpiredError*: Lawful basis has expired and cannot be
+      used
+
+   *  *PermissionDeniedError*: Permission explicitly denies the
+      requested processing
+
+   *  *LawfulBasisMissingError*: No valid lawful basis found for the
+      requested processing
+
+   *  *ProofVerificationError*: Lawful purpose proof mechanisms failed
+      validation
+
+   *  *ReferenceValidationError*: Attachment references invalid vCon
+      elements
+
+9.  Interoperability
+
+   To ensure interoperability across implementations:
+
+   *  Use only standard JSON data types in lawful purpose body
+      structures
+
+   *  Support graceful degradation when advanced features are
+      unavailable
+
+   *  Implement lawful purpose attachment format negotiation for multi-
+      party exchanges
+
+10.  Security Considerations
+
+   The vcon-core specification provides general-purpose security
+   mechanisms, such as digital signatures, designed to ensure the basic
+   integrity of the vCon container.  These mechanisms answer the
+   question, "Has this vCon been tampered with?"  However, managing
+   lawful purpose requires addressing a more specific and legally
+   significant question: "Did this specific person provide a valid basis
+   for this specific action at a specific time?"  Answering this
+   question requires a higher level of security and contextual
+   awareness.  The following sections detail the additional security
+   considerations that are critical for a lawful purpose mechanism to be
+   considered trustworthy and compliant with privacy regulations.
+
+10.1.  Cryptographic Protection and Forgery
+
+   *Background:* Forgery is the act of creating a fake record or
+   altering an existing one—for instance, by changing the expiration
+   date, expanding the scope of what was agreed to, or faking the
+   identity of the party.  The ability to prove that a lawful basis is
+   authentic and unaltered is the bedrock of any privacy compliance
+   framework like GDPR or CCPA.  A forged record is equivalent to having
+   no lawful basis at all and carries severe legal and financial
+   penalties.  While vcon-core provides a signature field, this
+   extension adds the necessary business rules to ensure that a
+   signature represents a trusted, verifiable, and legally binding act.
+
+   *Requirements:* Implementations MUST prevent forgery through:
+
+   *  Cryptographic signature verification for digital proof mechanisms.
+
+   *  External document integrity validation using content hashes.
+
+   *  Secure communication channels for external verification.
+
+   *  Audit logging of all validation activities.
+
+10.2.  Replay Attack Prevention
+
+   *Background:* A replay attack involves an attacker copying a valid
+   lawful purpose attachment from one vCon and maliciously inserting it
+   into a different vCon that the user never actually provided a basis
+   for.  Without replay protection, a user's lawful basis for a non-
+   sensitive inquiry could be "replayed" to appear as if they provided
+   it for the recording and analysis of a highly sensitive conversation.
+   This would be a massive privacy violation and would render the
+   mechanism meaningless.
+
+   *Requirements:* The lawful purpose attachment design MUST prevent
+   replay attacks through:
+
+   *  Cryptographic binding to specific vCon instances.
+
+   *  Timestamp validation with appropriate clock skew tolerance.
+
+   *  Nonce inclusion in proof mechanisms where applicable.
+
+   *  Reference validation to ensure lawful purpose applies to correct
+      content.
+
+10.3.  Secure Communication Channels
+
+   *Background:* Lawful purpose records are themselves sensitive
+   personal data.  It is critical that they are protected while in
+   transit between systems.  An attacker in a "man-in-the-middle"
+   position could intercept a vCon and alter it before it reaches its
+   destination, potentially stripping or modifying lawful purpose
+   information.
+
+   *Requirements:* All lawful purpose attachments MUST be integrity
+   protected using vCon signing mechanisms as defined in
+   [I-D.draft-ietf-vcon-core-00].  Lawful purpose attachments containing
+   sensitive information SHOULD be encrypted when transmitted outside
+   secure environments, for instance by using TLS 1.2 or higher for all
+   communications.
+
+10.4.  Audit Logging
+
+   *Background:* Lawful purpose is a matter of legal and regulatory
+   compliance.  If a dispute arises, the organization processing the
+   data must be able to _prove_ it had a valid lawful basis at the time
+   of the action.  An audit log provides this crucial, non-repudiable
+   evidence for regulators, auditors, and courts.  It is a cornerstone
+   of the "accountability" principle in modern privacy law.
+
+   *Requirements:* Systems that process or manage lawful purpose
+   attachments SHOULD maintain a secure, immutable record of all related
+   activities (e.g., when a lawful basis was given, checked, revoked, or
+   expired).  When a ledger is used, this requirement may be fulfilled
+   by the ledger service.
+
+11.  Privacy and Regulatory Compliance
+
+11.1.  Data Minimization
+
+   Lawful purpose attachments MUST implement data minimization
+   principles by:
+
+   *  Including only information necessary for verification
+
+   *  Avoiding duplication of personal data already in vCon elements
+
+   *  Supporting attachment redaction while maintaining verifiability
+
+   *  Implementing privacy-preserving verification mechanisms
+
+11.2.  Regulatory Alignment
+
+   The lawful purpose extension addresses requirements from major
+   privacy regulations:
+
+   *  *GDPR Article 7*: Conditions for lawful basis including withdrawal
+      mechanisms
+
+   *  *CCPA Section 1798.135*: Requirements for personal information
+      processing
+
+   *  *HIPAA Privacy Rule*: Requirements for protected health
+      information
+
+   Implementers MUST ensure their implementations comply with applicable
+   regulations in their jurisdiction.
+
+11.3.  Data Subject Rights
+
+   Implementations MUST support data subject rights including:
+
+   *  *Right of Access*: Enable data subjects to access their records
+
+   *  *Right of Rectification*: Allow correction of inaccurate
+      information
+
+   *  *Right to be Forgotten*: Support deletion and data erasure
+
+   *  *Right of Portability*: Enable export of data in interoperable
+      formats
+
+   *  *Withdrawal*: Provide mechanisms for revocation of a lawful basis
+
+12.  Conclusion
+
+   This document defines a comprehensive lawful purpose extension for
+   vCon that balances privacy protection with practical implementation
+   requirements.  The extension provides a foundation for lawful
+   purpose-aware conversation processing while maintaining compatibility
+   with existing vCon infrastructure.
+
+13.  Security and Privacy Considerations Summary
+
+   This lawful purpose extension addresses several critical security and
+   privacy concerns:
+
+   *Integrity*: Cryptographic protection prevents unauthorized
+   modification of records while maintaining verifiability across system
+   boundaries.
+
+   *Temporal Security*: Expiration controls and revalidation intervals
+   ensure a lawful basis cannot be misused beyond its intended temporal
+   scope.
+
+   *Audit Transparency*: SCITT integration provides cryptographic audit
+   trails for operations while maintaining privacy protections.
+
+   *Regulatory Compliance*: Structured management supports compliance
+   with GDPR, CCPA, HIPAA and other privacy regulations through
+   standardized metadata and processing controls.
+
+   *Data Minimization*: Privacy-preserving design minimizes data
+   collection and supports lawful purpose-driven access controls
+   throughout the conversation lifecycle.
+
+   Implementers should conduct thorough security reviews and ensure
+   compliance with applicable privacy regulations in their deployment
+   environments.
+
+14.  References
+
+14.1.  Normative References
+
+   [I-D.draft-ietf-scitt-scrapi-05]
+              Birkholz, H., "SCITT Receipt API", Work in Progress,
+              Internet-Draft, draft-ietf-scitt-scrapi-05, February 2025,
+              <I-D.draft-ietf-scitt-scrapi-05>.
+
+   [I-D.draft-ietf-vcon-core-00]
+              Petrie, D., "Virtualized Conversation (vCon) Container",
+              Work in Progress, Internet-Draft, draft-ietf-vcon-core-00,
+              March 2025, <I-D.draft-ietf-vcon-core-00>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC3339]  Klyne, G., "Date and Time on the Internet: Timestamps",
+              July 2002, <https://www.rfc-editor.org/rfc/rfc3339.html>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8949]  Bormann, C., "Concise Binary Object Representation
+              (CBOR)", December 2020,
+              <https://www.rfc-editor.org/rfc/rfc8949.html>.
+
+14.2.  Informative References
+
+   [CCPA]     State of California, "California Consumer Privacy Act",
+              2018, <https://oag.ca.gov/privacy/ccpa>.
+
+   [COSE-ALG] IANA, "COSE Algorithms", September 2025,
+              <https://www.iana.org/assignments/cose/cose.xhtml>.
+
+   [GDPR]     European Union, "General Data Protection Regulation",
+              2018, <https://gdpr.eu/>.
+
+   [HIPAA]    U.S. Department of Health and Human Services, "Health
+              Insurance Portability and Accountability Act", 1996,
+              <https://www.hhs.gov/hipaa/index.html>.
+
+   [I-D.draft-ietf-vcon-overview]
+              McCarthy-Howe, T., "The vCon - Conversation Data Container
+              - Overview", Work in Progress, Internet-Draft, draft-ietf-
+              vcon-overview-00, July 2025, <I-D.draft-ietf-vcon-
+              overview-00>.
+
+   [NIST-PRIVACY]
+              National Institute of Standards and Technology, "NIST
+              Privacy Framework", 2020,
+              <https://www.nist.gov/privacy-framework>.
+
+Appendix A.  IANA Considerations
+
+A.1.  vCon Extensions Names Registry
+
+   This document requests IANA to register the following extension in
+   the vCon Extensions Names Registry established by
+   [I-D.draft-ietf-vcon-core-00]:
+
+   *  *Extension Name*: lawful_purpose
+
+   *  *Extension Description*: Lawful purpose management for voice
+      conversation participants with cryptographic proof mechanisms and
+      regulatory compliance support
+
+   *  *Change Controller*: IESG
+
+   *  *Specification Document(s)*: RFC XXXX
+
+A.2.  Attachment Object Parameter Names Registry
+
+   This document requests IANA to register the following parameter in
+   the Attachment Object Parameter Names Registry:
+
+   *  *Parameter Name*: type
+
+   *  *Parameter Description*: Semantic type identifier for attachment
+      content
+
+   *  *Change Controller*: IESG
+
+   *  *Specification Document(s)*: RFC XXXX, Section 4
+
+   Note: This addresses the "TODO: type or purpose" noted in
+   Section 6.3.6 of [I-D.draft-ietf-vcon-core-00].
+
+A.3.  Lawful Purpose Attachment Type Values Registry
+
+   This document requests IANA to establish a new registry for lawful
+   purpose attachment type values with the following initial
+   registration:
+
+   *  *Type Value*: lawful_purpose
+
+   *  *Description*: Structured lawful purpose records with temporal
+      validity and cryptographic proof mechanisms
+
+   *  *Change Controller*: IESG
+
+   *  *Specification Document(s)*: RFC XXXX
+
+   Registration Template:
+
+   *Type Value*: The string value used as the attachment type identifier
+
+   *Description*: Brief description of the attachment type and its
+   purpose
+
+   *Change Controller*: For Standards Track RFCs, list "IESG".  For
+   others, give the name of the responsible party.
+
+   *Specification Document(s)*: Reference to defining documents with
+   URIs where available ## Lawful Purpose Ledger Type Values Registry
+
+   This document requests IANA to establish a new registry for lawful
+   purpose ledger type values with the following initial registration:
+
+   *  *Type Value*: scitt
+
+   *  *Description*: A transparency service implementing the SCITT
+      (Supply Chain Integrity, Transparency, and Trust) protocol.
+
+   *  *Change Controller*: IESG
+
+   *  *Specification Document(s)*: RFC XXXX,
+      [I-D.draft-ietf-scitt-scrapi-05]
+
+   Registration Template:
+
+   *Type Value*: The string value used as the ledger type identifier
+
+   *Description*: Brief description of the ledger type and its purpose
+
+   *Change Controller*: For Standards Track RFCs, list "IESG".  For
+   others, give the name of the responsible party.
+
+   *Specification Document(s)*: Reference to defining documents with
+   URIs where available
+
+Appendix B.  Acknowledgements
+
+   *  Appreciation to Vinnie Micciche for his unwavering support during
+      the development of this lawful purpose attachment in particular,
+      and vCons in general.
+
+Author's Address
+
+   Thomas McCarthy-Howe
+   Strolid
+   Email: thomas@strolid.com
