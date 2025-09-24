@@ -3,6 +3,7 @@ title: "vCon Lawful Purpose"
 abbrev: "vCon Lawful Purpose"
 category: std
 docname: draft-howe-vcon-lawful-purpose-00
+replaces: draft-howe-vcon-consent-00
 ipr: trust200902
 area: "Applications and Real-Time"
 workgroup: "vCon"
