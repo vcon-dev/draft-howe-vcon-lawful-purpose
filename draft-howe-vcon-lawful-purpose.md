@@ -12,7 +12,7 @@ venue:
   type: "Working Group"
   mail: "vcon@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/vcon/"
-  github: "vcon-dev/vcon"
+  github: "vcon-dev/draft-howe-vcon-lawful-purpose"
   latest: "https://vcon-dev.github.io/draft-howe-vcon-consent/draft-howe-vcon-lawful-purpose-latest.html"
 
 stand_alone: yes
@@ -155,7 +155,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Lawful Basis Attachment**: A vCon attachment with type "lawful_basis" that contains structured information documenting the lawful basis for processing conversation data.
 
-**Attestation Ledger**: A SCITT Transparency Service that maintains an authoritative, verifiable log of attestations about a vCon, which can include attestations of a lawful basis.
+**Attestation Ledger**: An external transparency service that maintains an authoritative, verifiable log of attestations about a vCon, which can include attestations of a lawful basis. This document defines integration with ledgers using the SCITT protocol.
 
 **Compatible Extension**: A vCon extension that introduces additional data without altering the meaning or structure of existing elements, as defined in [I-D.draft-ietf-vcon-core-00].
 
@@ -257,7 +257,9 @@ The `body` field of the lawful purpose attachment MUST contain a JSON object wit
 
 - **terms_of_service**: URL reference to applicable terms of service document
 - **status_interval**: Duration string for revalidation intervals (e.g., "30d")
-- **ledger**: URL to external SCITT ledger for transparency
+- **ledger**: An object containing information about an external transparency ledger for audit trails. The object has the following fields:
+  - **type**: (string, required) The type of the transparency ledger service. This document defines an initial value of "scitt". Other values may be registered in an IANA registry.
+  - **url**: (string, required) The URL endpoint for the transparency ledger service.
 - **proof_mechanisms**: Array of proof objects supporting the lawful basis
 - **metadata**: Additional implementation-specific metadata
 
@@ -327,7 +329,10 @@ Supported proof types include:
     ],
     "terms_of_service": "https://example.com/terms/v2024.1",
     "status_interval": "30d",
-    "ledger": "https://transparency.example.com/lawful_purpose/ledger"
+    "ledger": {
+      "type": "scitt",
+      "url": "https://transparency.example.com/lawful_purpose/ledger"
+    }
   }
 }
 ```
@@ -368,18 +373,20 @@ Implementations SHOULD verify proof mechanisms when present:
 3. Check external system lawful purpose status via API calls
 4. Log proof verification results for audit purposes
 
-# SCITT Transparency Integration
+# Transparency Service Integration
 
 ## Ledger Services
 
-The optional `ledger` field enables integration with SCITT (Supply Chain Integrity, Transparency, and Trust) transparency services for audit trails.
+The optional `ledger` field enables integration with external transparency services for audit trails. The `ledger` object's `type` field specifies the protocol to be used.
 
-When present, the ledger URL MUST:
+When the `ledger` object is present and its `type` is "scitt", the `url` field MUST:
 
-- Reference a SCITT Transparency Service implementing SCRAPI [I-D.draft-ietf-scitt-scrapi-05]
+- Reference a SCITT (Supply Chain Integrity, Transparency, and Trust) Transparency Service implementing SCRAPI [I-D.draft-ietf-scitt-scrapi-05]
 - Provide cryptographic receipts for state changes
 - Support status queries and updates
 - Implement appropriate access controls and privacy protections
+
+Other transparency service types may be used if they are registered with IANA. The documentation for each registered type must specify the necessary protocols and interaction models.
 
 ## Ledger Integration Requirements
 
@@ -491,48 +498,6 @@ Implementations MUST support data subject rights including:
 
 This document defines a comprehensive lawful purpose extension for vCon that balances privacy protection with practical implementation requirements. The extension provides a foundation for lawful purpose-aware conversation processing while maintaining compatibility with existing vCon infrastructure.
 
-# IANA Considerations
-
-## vCon Extensions Names Registry
-
-This document requests IANA to register the following extension in the vCon Extensions Names Registry established by [I-D.draft-ietf-vcon-core-00]:
-
-- **Extension Name**: lawful_purpose
-- **Extension Description**: Lawful purpose management for voice conversation participants with cryptographic proof mechanisms and regulatory compliance support
-- **Change Controller**: IESG
-- **Specification Document(s)**: [this document]
-
-## Attachment Object Parameter Names Registry
-
-This document requests IANA to register the following parameter in the Attachment Object Parameter Names Registry:
-
-- **Parameter Name**: type
-- **Parameter Description**: Semantic type identifier for attachment content
-- **Change Controller**: IESG
-- **Specification Document(s)**: [this document], Section 4
-
-Note: This addresses the "TODO: type or purpose" noted in Section 6.3.6 of [I-D.draft-ietf-vcon-core-00].
-
-## Lawful Purpose Attachment Type Values Registry
-
-This document requests IANA to establish a new registry for lawful purpose attachment type values with the following initial registration:
-
-- **Type Value**: lawful_purpose
-- **Description**: Structured lawful purpose records with temporal validity and cryptographic proof mechanisms
-- **Change Controller**: IESG
-- **Specification Document(s)**: [this document]
-
-Registration Template:
-
-**Type Value**: The string value used as the attachment type identifier
-
-**Description**: Brief description of the attachment type and its purpose
-
-**Change Controller**: For Standards Track RFCs, list "IESG". For others, give the name of the responsible party.
-
-**Specification Document(s)**: Reference to defining documents with URIs where available
-
-
 # Security and Privacy Considerations Summary
 
 This lawful purpose extension addresses several critical security and privacy concerns:
@@ -550,6 +515,65 @@ This lawful purpose extension addresses several critical security and privacy co
 Implementers should conduct thorough security reviews and ensure compliance with applicable privacy regulations in their deployment environments.
 
 --- back
+
+# IANA Considerations
+
+## vCon Extensions Names Registry
+
+This document requests IANA to register the following extension in the vCon Extensions Names Registry established by [I-D.draft-ietf-vcon-core-00]:
+
+- **Extension Name**: lawful_purpose
+- **Extension Description**: Lawful purpose management for voice conversation participants with cryptographic proof mechanisms and regulatory compliance support
+- **Change Controller**: IESG
+- **Specification Document(s)**: RFC XXXX
+
+## Attachment Object Parameter Names Registry
+
+This document requests IANA to register the following parameter in the Attachment Object Parameter Names Registry:
+
+- **Parameter Name**: type
+- **Parameter Description**: Semantic type identifier for attachment content
+- **Change Controller**: IESG
+- **Specification Document(s)**: RFC XXXX, Section 4
+
+Note: This addresses the "TODO: type or purpose" noted in Section 6.3.6 of [I-D.draft-ietf-vcon-core-00].
+
+## Lawful Purpose Attachment Type Values Registry
+
+This document requests IANA to establish a new registry for lawful purpose attachment type values with the following initial registration:
+
+- **Type Value**: lawful_purpose
+- **Description**: Structured lawful purpose records with temporal validity and cryptographic proof mechanisms
+- **Change Controller**: IESG
+- **Specification Document(s)**: RFC XXXX
+
+Registration Template:
+
+**Type Value**: The string value used as the attachment type identifier
+
+**Description**: Brief description of the attachment type and its purpose
+
+**Change Controller**: For Standards Track RFCs, list "IESG". For others, give the name of the responsible party.
+
+**Specification Document(s)**: Reference to defining documents with URIs where available
+## Lawful Purpose Ledger Type Values Registry
+
+This document requests IANA to establish a new registry for lawful purpose ledger type values with the following initial registration:
+
+- **Type Value**: scitt
+- **Description**: A transparency service implementing the SCITT (Supply Chain Integrity, Transparency, and Trust) protocol.
+- **Change Controller**: IESG
+- **Specification Document(s)**: RFC XXXX, [I-D.draft-ietf-scitt-scrapi-05]
+
+Registration Template:
+
+**Type Value**: The string value used as the ledger type identifier
+
+**Description**: Brief description of the ledger type and its purpose
+
+**Change Controller**: For Standards Track RFCs, list "IESG". For others, give the name of the responsible party.
+
+**Specification Document(s)**: Reference to defining documents with URIs where available
 
 # Acknowledgements
 
