@@ -24,7 +24,7 @@ author:
  -
     name: Thomas McCarthy-Howe
     organization: Strolid
-    email: thomas@strolid.com
+    email: ghostofbasho@gmail.com
 
 normative:
   RFC2119:
