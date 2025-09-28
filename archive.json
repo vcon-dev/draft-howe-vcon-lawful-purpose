@@ -1,7 +1,7 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-25T00:47:27.508907+00:00",
-  "repo": "vcon-dev/draft-howe-vcon-lawful-purpose",
+  "timestamp": "2025-09-28T00:53:23.178395+00:00",
+  "repo": "vcon-dev/draft-howe-vcon-lawful-basis",
   "labels": [
     {
       "name": "bug",
@@ -55,7 +55,7 @@
       "number": 1,
       "id": "PR_kwDOPPvOis6qTQe4",
       "title": "Lawful-purpose",
-      "url": "https://github.com/vcon-dev/draft-howe-vcon-lawful-purpose/pull/1",
+      "url": "https://github.com/vcon-dev/draft-howe-vcon-lawful-basis/pull/1",
       "state": "MERGED",
       "author": "howethomas",
       "authorAssociation": "CONTRIBUTOR",
@@ -64,10 +64,10 @@
       "body": "Updates name and document.",
       "createdAt": "2025-09-24T14:23:11Z",
       "updatedAt": "2025-09-24T14:29:42Z",
-      "baseRepository": "vcon-dev/draft-howe-vcon-lawful-purpose",
+      "baseRepository": "vcon-dev/draft-howe-vcon-lawful-basis",
       "baseRefName": "main",
       "baseRefOid": "1799fea10ef46fad99e349df8668345bb3743dda",
-      "headRepository": "vcon-dev/draft-howe-vcon-lawful-purpose",
+      "headRepository": "vcon-dev/draft-howe-vcon-lawful-basis",
       "headRefName": "lawful-purpose",
       "headRefOid": "97a9171f557b69668e482a68e7c0c3b36bff6cad",
       "closedAt": "2025-09-24T14:29:37Z",
